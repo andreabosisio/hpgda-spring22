@@ -1,9 +1,9 @@
 CXX=g++
-FLAGS = -O2 -std=c++11
+FLAGS = -O2  -std=c++11 -lboost_system -Xpreprocessor -fopenmp -I/usr/local/include -L/usr/local/lib -lomp
 
 BIN_FOLDER=bin
 SRC_FOLDER=src
-FILES=${SRC_FOLDER}/main.cpp ${SRC_FOLDER}/AdjacencyList.cpp 
+FILES=${SRC_FOLDER}/*.cpp  
 .PHONY: all clean
 
 all:

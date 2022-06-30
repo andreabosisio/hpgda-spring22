@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream> 
 #include <vector>
+#include <boost/bimap.hpp>
 #include <set>
 #include <chrono>
 #include <algorithm>
@@ -36,11 +37,11 @@ std::vector<std::string> split(const std::string &s, char delim){
 }
 
 // load the graph
-std::set<uint64_t> load_graph(std::string filename, bool undirected, std::tuple<uint64_t, uint64_t, double>* edges, uint64_t e){
+boost::bimap<uint64_t, uint64_t> load_graph(std::string filename, bool undirected, std::tuple<uint64_t, uint64_t, double>* edges, uint64_t num_edges){
     std::ifstream eFile(filename+".e");
-    std::string line;
-    std::vector<std::string> tmp;    
-    std::set<uint64_t> nodes;
+    std::ifstream vFile(filename+".v");
+    std::string line;    
+    std::vector<std::string> tmp;
 
     while (std::getline(eFile, line)){
         if (!line.empty()){
@@ -50,36 +51,70 @@ std::set<uint64_t> load_graph(std::string filename, bool undirected, std::tuple<
     }
     eFile.seekg(0);
 
+    
+    if(tmp.size() < 2) 
+    {
+        std::cout << "Incorrect format file / non-existing file" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+
     bool weighted = false;
     if (tmp.size() == 3)
         weighted = true;
 
-    uint64_t i = 0;
-
     // TODO make it faster
-    while (std::getline(eFile, line)){
-        if (!line.empty()){
+    std::vector<uint64_t> nodes;
+    boost::bimap<uint64_t, uint64_t> nodes_bimap;
+
+    while (std::getline(vFile, line)) {
+        if (!line.empty()) {
+            nodes.push_back(std::stoul(line));
+        } 
+    }
+    
+    std::sort(nodes.begin(), nodes.end());
+
+    uint64_t new_idx = 0;
+    for (uint64_t node : nodes) {
+        nodes_bimap.insert({node, new_idx});
+        new_idx++;
+    }
+
+    uint64_t tmp_from, tmp_to;
+    double tmp_weight;
+    uint64_t i = 0;
+    while (std::getline(eFile, line)) {
+        if (!line.empty()) {
             tmp = split(line, ' ');
-            edges[i] = std::make_tuple(std::stoul(tmp[0]), std::stoul(tmp[1]), (weighted)?std::stof(tmp[2]):1);
+
+            tmp_from = std::stoul(tmp[0]);
+            tmp_to = std::stoul(tmp[1]);
+            tmp_weight = (weighted)?std::stof(tmp[2]):1; 
+            
+            edges[i] = std::make_tuple(nodes_bimap.left.at(tmp_from), nodes_bimap.left.at(tmp_to), tmp_weight);
+             
+
             if (undirected) 
-                edges[e/2+i] = std::make_tuple(std::stoul(tmp[1]), std::stoul(tmp[0]), (weighted)?std::stof(tmp[2]):1);
-            nodes.insert(std::stoul(tmp[0]));
-            nodes.insert(std::stoul(tmp[1]));
+            {
+                edges[num_edges/2+i] = std::make_tuple(nodes_bimap.left.at(tmp_to), nodes_bimap.left.at(tmp_from), tmp_weight);
+            }
             i++;
         }
     }
-    return nodes;
+    
+    return nodes_bimap; 
 }
 
-void print_graph_info(uint64_t v, uint64_t e, bool undirected){
+void print_graph_info(uint64_t num_vertices, uint64_t num_edges, bool undirected){
     std::string prop = (undirected) ? "Undirected" : "Directed";
     std::cout << prop << " graph" << std::endl;
-    std::cout << "num nodes: " << v << std::endl;
-    std::cout << "num directed edges: " << e << std::endl << std::endl;
+    std::cout << "num nodes: " << num_vertices << std::endl;
+    std::cout << "num directed edges: " << num_edges << std::endl << std::endl;
 }
 
-void print_edge_list(std::tuple<uint64_t, uint64_t, double>* edges, uint64_t e){
-    for(uint64_t j = 0; j < e; j++)
+void print_edge_list(std::tuple<uint64_t, uint64_t, double>* edges, uint64_t num_edges){
+    for(uint64_t j = 0; j < num_edges; j++)
         std::cout << std::get<0>(edges[j]) << " " << std::get<1>(edges[j]) << " " << std::get<2>(edges[j]) << std::endl;
     std::cout << std::endl;
 }
