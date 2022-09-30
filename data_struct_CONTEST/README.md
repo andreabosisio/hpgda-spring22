@@ -5,6 +5,9 @@ requires the creation of an appropriate data structure for the implementation of
 algorithm and a neighbor search algorithm for each node. The data structure interfaces with real data from
 the LDBC Graphanalytics Benchmark suite dataset. The evaluation is based on: graph population time,
 graph size in memory and execution time of the BFS and DFS algorithms.
+
+A [shirt report](./HPGDA-report-bosisio_karra.pdf) of the implementation and [sildes for the final project presentation](./presentation.pdf) are available. 
+
 ### Evaluation Graphs
 The graphs employed for the evaluation are available in the ``` eval_graphs.tar.gz``` archive on [Google Drive](https://drive.google.com/file/d/15vjYvcNAt7FODQqu4kma3X8jXnxTC6J1/view?usp=sharing).
 You can download and extract the archive by running (in this folder):
