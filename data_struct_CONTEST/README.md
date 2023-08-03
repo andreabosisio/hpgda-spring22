@@ -6,7 +6,9 @@ algorithm and a neighbor search algorithm for each node. The data structure inte
 the LDBC Graphanalytics Benchmark suite dataset. The evaluation is based on: graph population time,
 graph size in memory and execution time of the BFS and DFS algorithms.
 
-A [short report](./HPGDA-report-bosisio_karra.pdf) of the implementation and [sildes for the final project presentation](./presentation.pdf) are available. 
+A [short report](./HPGDA-report-bosisio_karra.pdf) of the implementation and the [sildes for the final project presentation](./presentation.pdf) are available. 
+
+The original repo we worked on is [this](https://github.com/andreabosisio/hpgda2022_data-structures).
 
 ### Evaluation Graphs
 The graphs employed for the evaluation are available in the ``` eval_graphs.tar.gz``` archive on [Google Drive](https://drive.google.com/file/d/15vjYvcNAt7FODQqu4kma3X8jXnxTC6J1/view?usp=sharing).
