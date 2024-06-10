@@ -25,7 +25,7 @@ For each graph, there is a folder containing 3 files:
 ## Methods
 To store the graph we used a data structure based on Compressed Sparse Row (CSR) format. We implemented the following methods:
 * ```populate```, that, given an edge list, populate the CSR data structure 
-* ```get_neighbors```, implemented with an iteretor that, given a vertex, returns all the neigbors (with the corresponding weight) of that vertex
+* ```get_neighbors```, implemented with an iteretor that, given a vertex, returns all the neighbors (along with the corresponding weight) of that vertex
 
 ## Compile and run
 ### Compile
